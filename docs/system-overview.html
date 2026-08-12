@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Law Firm OS — System Overview</title>
+<style>
+  :root{
+    --bg:#0f1115; --panel:#171a21; --panel-2:#1d212b; --ink:#e8eaed; --muted:#9aa2b1;
+    --line:#2a2f3a; --accent:#c9a227; --accent-2:#5b8def; --good:#4bb375; --warn:#d9a441; --stop:#d1615d;
+    --mono:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+    --sans:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  }
+  @media (prefers-color-scheme: light){
+    :root{ --bg:#f6f5f1; --panel:#ffffff; --panel-2:#faf9f5; --ink:#1b1e24; --muted:#5c6472;
+      --line:#e3e1d8; --accent:#9a7b12; --accent-2:#2f5fc0; }
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--sans);line-height:1.55;
+    -webkit-font-smoothing:antialiased}
+  .wrap{max-width:960px;margin:0 auto;padding:48px 24px 96px}
+  header.hero{border-bottom:1px solid var(--line);padding-bottom:28px;margin-bottom:36px}
+  .eyebrow{font-family:var(--mono);font-size:12px;letter-spacing:.14em;text-transform:uppercase;
+    color:var(--accent);margin:0 0 10px}
+  h1{font-size:34px;line-height:1.15;margin:0 0 10px;font-weight:700}
+  .sub{color:var(--muted);font-size:16px;max-width:62ch;margin:0}
+  .meta{display:flex;flex-wrap:wrap;gap:8px 18px;margin-top:20px;font-size:13px;color:var(--muted)}
+  .meta b{color:var(--ink);font-weight:600}
+  h2{font-size:22px;margin:52px 0 14px;padding-top:8px;font-weight:700;
+    display:flex;align-items:center;gap:10px}
+  h2 .n{font-family:var(--mono);font-size:13px;color:var(--accent);border:1px solid var(--line);
+    border-radius:6px;padding:2px 8px;background:var(--panel)}
+  h3{font-size:16px;margin:26px 0 8px}
+  p{margin:0 0 12px}
+  a{color:var(--accent-2)}
+  .lead{font-size:17px;color:var(--ink)}
+  code{font-family:var(--mono);font-size:.88em;background:var(--panel-2);border:1px solid var(--line);
+    padding:1px 5px;border-radius:4px}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:20px 22px;margin:16px 0}
+  .grid{display:grid;gap:14px}
+  @media(min-width:680px){.grid.two{grid-template-columns:1fr 1fr}.grid.three{grid-template-columns:1fr 1fr 1fr}}
+  table{width:100%;border-collapse:collapse;font-size:14px;margin:8px 0 4px;display:block;overflow-x:auto}
+  th,td{text-align:left;padding:9px 12px;border-bottom:1px solid var(--line);vertical-align:top}
+  th{font-size:12px;letter-spacing:.04em;text-transform:uppercase;color:var(--muted);font-weight:600}
+  tbody tr:last-child td{border-bottom:none}
+  .pill{display:inline-block;font-family:var(--mono);font-size:11px;padding:2px 8px;border-radius:20px;
+    border:1px solid var(--line);white-space:nowrap}
+  .pill.on{color:var(--good);border-color:color-mix(in srgb,var(--good) 45%,var(--line))}
+  .pill.dev{color:var(--warn);border-color:color-mix(in srgb,var(--warn) 45%,var(--line))}
+  .pill.pend{color:var(--muted)}
+  .agent{border:1px solid var(--line);border-radius:12px;padding:18px 20px;background:var(--panel)}
+  .agent h3{margin:0 0 2px;display:flex;align-items:baseline;gap:8px;flex-wrap:wrap}
+  .agent .id{font-family:var(--mono);font-size:12px;color:var(--muted)}
+  .agent .role{color:var(--muted);font-size:13px;margin:0 0 10px}
+  .agent ul{margin:0;padding-left:18px;font-size:14px}
+  .agent li{margin:3px 0}
+  ul.clean{list-style:none;padding:0;margin:0}
+  ul.clean li{padding:8px 0 8px 26px;position:relative;border-bottom:1px solid var(--line)}
+  ul.clean li:last-child{border-bottom:none}
+  ul.clean li::before{content:"";position:absolute;left:4px;top:15px;width:8px;height:8px;
+    border-radius:50%;background:var(--accent)}
+  .flow{font-family:var(--mono);font-size:13px;background:var(--panel-2);border:1px solid var(--line);
+    border-radius:10px;padding:16px 18px;white-space:pre;overflow-x:auto;color:var(--muted);line-height:1.7}
+  .flow b{color:var(--ink)}
+  .gate{display:flex;gap:12px;align-items:flex-start;padding:10px 0;border-bottom:1px solid var(--line)}
+  .gate:last-child{border-bottom:none}
+  .gate .g{font-family:var(--mono);font-size:12px;color:var(--accent);flex:0 0 64px;padding-top:2px}
+  .stoprule{border-left:3px solid var(--stop);padding-left:14px;margin:10px 0;color:var(--ink)}
+  .note{font-size:13px;color:var(--muted);font-style:italic}
+  footer{margin-top:64px;padding-top:20px;border-top:1px solid var(--line);color:var(--muted);font-size:13px}
+  .toc{font-size:14px;columns:2;column-gap:32px}
+  .toc a{display:block;padding:4px 0;text-decoration:none;color:var(--ink);border-bottom:1px solid transparent}
+  .toc a:hover{color:var(--accent-2)}
+  @media(max-width:520px){.toc{columns:1}}
+  @media print{body{background:#fff;color:#000}.wrap{max-width:100%}.card,.agent{break-inside:avoid}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header class="hero">
+  <p class="eyebrow">Internal Systems Documentation · Anonymized Public Edition</p>
+  <h1>The Legal Operating System</h1>
+  <p class="sub">An agent-based operations infrastructure for a criminal defense &amp; personal injury practice — a Chief-of-Staff orchestrator directing six specialist agents under hard privacy protocols, hook-enforced guardrails, and a verified audit trail.</p>
+  <div class="meta">
+    <span><b>Firm:</b> a criminal defense &amp; personal injury practice</span>
+    <span><b>Operator:</b> the Operations Manager</span>
+    <span><b>Phase:</b> 2 — Agent Setup</span>
+    <span><b>Edition:</b> anonymized for public release</span>
+  </div>
+</header>
+
+<div class="card">
+  <strong>Contents</strong>
+  <nav class="toc" style="margin-top:10px">
+    <a href="#what">1 · What This System Is</a>
+    <a href="#org">2 · Org &amp; Command Structure</a>
+    <a href="#agents">3 · The Agent Team</a>
+    <a href="#routing">4 · How Work Flows</a>
+    <a href="#protocols">5 · The Rule Layer</a>
+    <a href="#privacy">6 · Privacy &amp; Guardrails</a>
+    <a href="#verification">7 · The Verification Gate</a>
+    <a href="#memory">8 · Memory &amp; Institutional Record</a>
+    <a href="#infra">9 · Files, Hooks &amp; Infrastructure</a>
+    <a href="#status">10 · Current Status &amp; Roadmap</a>
+  </nav>
+</div>
+
+<h2 id="what"><span class="n">01</span> What This System Is</h2>
+<p class="lead">The Law Firm OS is the firm's AI operations layer — not a chatbot, but a small organization of specialized agents that run the back office of a law practice.</p>
+<p>Each agent has a defined role, a fixed autonomy ceiling, and a single human in the loop: the Operations Manager, who is the primary interface to the system. The firm's attorney (President) and office administrator are the other human principals. The design goal is leverage without exposure: the agents draft, research, categorize, and surface — but they never send, never move money, never touch client files, and never act on their own outside a tightly bounded set of "autonomous" operations.</p>
+<div class="grid three">
+  <div class="card"><strong>Practice</strong><p class="note" style="margin:6px 0 0">Criminal defense (primary) &amp; personal injury, multi-county practice area.</p></div>
+  <div class="card"><strong>System of record</strong><p class="note" style="margin:6px 0 0">Clio (client cases) — path-locked, never AI-accessible. The agents operate <em>around</em> it, never inside it.</p></div>
+  <div class="card"><strong>Design principle</strong><p class="note" style="margin:6px 0 0">Draft &amp; surface, don't execute. Every outward or irreversible action routes to a human for approval.</p></div>
+</div>
+
+<h2 id="org"><span class="n">02</span> Org &amp; Command Structure</h2>
+<p>The system mirrors a real executive team. Humans sit at the top; a single orchestrator agent — the Chief of Staff — is the only agent the operator talks to directly. Everything else is dispatched, verified, and synthesized back through that one point.</p>
+<div class="flow"><b>Operations Manager</b>  ·  <b>President/Attorney</b>  ·  <b>Office Administrator</b>
+        │
+        └── <b>Chief of Staff</b> [cos-001]   ← the only agent the operator addresses directly
+                │
+                ├── <b>CFO</b>   [cfo-001]   finance · billing · P&amp;L · trust-accounting hygiene
+                ├── <b>CMO</b>   [cmo-001]   marketing · SEO · web copy · reviews
+                ├── <b>COO</b>   [coo-001]   ops · scheduling · deadlines · vendor comms
+                │        └── can invoke → Research
+                ├── <b>Research</b> [res-001]  state criminal/PI law · statutes · agency rules
+                └── <b>Builder</b> [bld-001]  scripts · tools · dashboards · automations</div>
+<p class="note">The Chief of Staff never does domain work itself. It routes, enforces the rules, runs verification on every returned result, and hands the operator a single synthesized answer.</p>
+
+<h2 id="agents"><span class="n">03</span> The Agent Team</h2>
+<p>Every agent is defined by a four-file "soul" set — <code>SOUL.md</code> (who it is &amp; its jobs), <code>AGENTS.md</code> (who it talks to), <code>TOOLS.md</code> (what it can touch), and <code>IDENTITY.md</code> (ID, model, autonomy tier, status) — plus a spawn definition under <code>.claude/agents/</code>. Agents read the four backbone files at every spawn before doing anything.</p>
+
+<div class="grid two">
+  <div class="agent">
+    <h3>Chief of Staff <span class="id">cos-001</span> <span class="pill on">Active</span></h3>
+    <p class="role">Orchestrator — routes all tasks, enforces protocols, owns the institutional record</p>
+    <ul>
+      <li>Only agent with a direct line to the operator</li>
+      <li>Dispatches to specialists (parallel / sequential / background)</li>
+      <li>Runs the 5-gate Verification Standard on all output</li>
+      <li>Sole writer of <code>MEMORY.md</code> and <code>WORKSPACE.md</code></li>
+    </ul>
+  </div>
+  <div class="agent">
+    <h3>Research <span class="id">res-001</span> <span class="pill on">Active</span></h3>
+    <p class="role">State criminal/PI legal research — statutes, agency rules, case law, citation verification</p>
+    <ul>
+      <li>On-demand only, never autonomous</li>
+      <li>Returns a 5-field report + mandatory Citations section</li>
+      <li>Verifies statute text against the state legislature's official site</li>
+      <li>No published output, no file moves</li>
+    </ul>
+  </div>
+  <div class="agent">
+    <h3>COO <span class="id">coo-001</span> <span class="pill dev">Phase 1 complete</span></h3>
+    <p class="role">Operations — court &amp; agency deadlines, scheduling, vendor comms, workspace hygiene</p>
+    <ul>
+      <li>Tracks court &amp; administrative deadlines</li>
+      <li>Drafts scheduling proposals &amp; vendor messages</li>
+      <li>Can invoke Research for a legal question</li>
+      <li>Never sends, never executes file moves</li>
+    </ul>
+  </div>
+  <div class="agent">
+    <h3>CFO <span class="id">cfo-001</span> <span class="pill dev">Phase 1 complete</span></h3>
+    <p class="role">Finance — invoice drafts, P&amp;L review, expense categorization, trust hygiene</p>
+    <ul>
+      <li>Drafts &amp; surfaces only — no journal entries, no money movement</li>
+      <li>Trust accounting is hygiene-flag-only (state bar rules; the attorney decides)</li>
+      <li>Firm-level rollups only — never per-client financials in output</li>
+      <li>Works from operator-curated exports, never live Drive data</li>
+    </ul>
+  </div>
+  <div class="agent">
+    <h3>CMO <span class="id">cmo-001</span> <span class="pill pend">Pending design</span></h3>
+    <p class="role">Marketing — SEO, website copy, ad copy, review responses, social</p>
+    <ul>
+      <li>Covers the firm's two public websites</li>
+      <li>Drafts content; publishing needs operator approval</li>
+    </ul>
+  </div>
+  <div class="agent">
+    <h3>Builder <span class="id">bld-001</span> <span class="pill pend">Pending design</span></h3>
+    <p class="role">Tooling — scripts, dashboards, automations, intake forms</p>
+    <ul>
+      <li>Invokable by any agent via the Chief of Staff</li>
+      <li>Owns new API integrations (with operator authorization)</li>
+    </ul>
+  </div>
+</div>
+
+<h2 id="routing"><span class="n">04</span> How Work Flows</h2>
+<p>A request from the operator always lands with the Chief of Staff, which decides the dispatch pattern:</p>
+<div class="grid three">
+  <div class="card"><strong>Parallel</strong><p class="note" style="margin:6px 0 0">3+ unrelated tasks, no shared state, clean file boundaries. Fired concurrently.</p></div>
+  <div class="card"><strong>Sequential</strong><p class="note" style="margin:6px 0 0">Any dependency, shared files, or unclear scope. Understood before proceeding.</p></div>
+  <div class="card"><strong>Background</strong><p class="note" style="margin:6px 0 0">Research/analysis not blocking the current thread; results collected later.</p></div>
+</div>
+<p style="margin-top:14px">Specialists return their work in a fixed report format. The Chief of Staff verifies it, redacts if needed, logs the outcome, and hands the operator one clean answer — never a transcript of the process.</p>
+<div class="flow">Operator ──▶ <b>Chief of Staff</b> ──▶ dispatch ──▶ <b>specialist(s)</b>
+                                                  │
+                                         5-field report
+                                                  ▼
+Operator ◀── synthesized answer ◀── <b>Verification (5 gates)</b> ◀──┘</div>
+<h3>The report format — every agent, every time</h3>
+<div class="flow">TASK:      what was assigned — one line
+STATUS:    Complete · In Progress · Blocked · Needs Approval · On Hold · Failed
+SUMMARY:   2–3 sentences — what was done and the result
+FLAGS:     what the operator must decide/approve/know — "None" if clean
+NEXT STEP: who does what next — "None" if complete</div>
+
+<h2 id="protocols"><span class="n">05</span> The Rule Layer</h2>
+<p>Four backbone documents govern everything. They are read-only to the agents and load at the start of every session and every spawn.</p>
+<table>
+  <thead><tr><th>File</th><th>Role</th></tr></thead>
+  <tbody>
+    <tr><td><code>CLAUDE.md</code></td><td>Master orchestrator instructions — the session entry point &amp; hard rules</td></tr>
+    <tr><td><code>ABOS.md</code></td><td>Agent-Based Operations System — org chart, agent directory, escalation paths</td></tr>
+    <tr><td><code>PROTOCOLS.md</code></td><td>The non-negotiable constraints — privacy, verification, hygiene, security</td></tr>
+    <tr><td><code>WORKSPACE.md</code></td><td>Live state — active tasks, completed work, open decisions</td></tr>
+    <tr><td><code>MEMORY.md</code></td><td>Institutional memory — standing decisions &amp; an append-only event log</td></tr>
+  </tbody>
+</table>
+<h3>Autonomy tiers</h3>
+<table>
+  <thead><tr><th>Action</th><th>Autonomy</th></tr></thead>
+  <tbody>
+    <tr><td>Read files, research, draft content</td><td><span class="pill on">Autonomous</span></td></tr>
+    <tr><td>Write to <code>knowledge-base/</code>, <code>outputs/</code></td><td><span class="pill on">Autonomous</span></td></tr>
+    <tr><td>Update <code>MEMORY.md</code> / <code>WORKSPACE.md</code></td><td><span class="pill on">Autonomous — cos-001 only</span></td></tr>
+    <tr><td>Move / rename any file</td><td><span class="pill dev">Needs operator approval</span></td></tr>
+    <tr><td>Send any communication</td><td><span class="pill dev">Needs operator approval + review</span></td></tr>
+    <tr><td>Make any financial entry</td><td><span class="pill dev">Needs operator approval</span></td></tr>
+    <tr><td>Publish content · spawn an agent · edit protocols</td><td><span class="pill dev">Needs operator approval</span></td></tr>
+  </tbody>
+</table>
+
+<h2 id="privacy"><span class="n">06</span> Privacy &amp; Guardrails</h2>
+<p>This is a law firm: attorney–client privilege, HIPAA-adjacent medical records in PI cases, and state bar obligations all apply. The privacy protocol overrides every other instruction in every agent file.</p>
+<div class="stoprule"><strong>Never accessed, under any circumstances:</strong> the protected client-files folder · the <code>Clio</code> folder · firm-member personal folders · anything referencing the co-counsel firm (cross-firm matter) — and every subfolder of these.</div>
+<ul class="clean">
+  <li>No client PII in any output — agents use "Client A", "the defendant", "Case #X".</li>
+  <li>PI files are treated as maximum sensitivity — never referenced, summarized, or processed.</li>
+  <li>Firm-member personal PII (tax docs, banking, medical, IDs) is off-limits, identical to client PII.</li>
+  <li>Drive search is path-discipline, not free-text — scoped to explicitly firm-public folders.</li>
+  <li>If unsure whether something holds PII, don't open it — flag to the Chief of Staff.</li>
+</ul>
+<h3>Enforced in code, not just in prose</h3>
+<p>Three runtime hooks turn the protocol into hard blocks at tool-call time — they fire before a tool runs and can deny it:</p>
+<table>
+  <thead><tr><th>Hook</th><th>Trigger</th><th>What it does</th></tr></thead>
+  <tbody>
+    <tr><td><code>block_protected.sh</code></td><td>PreToolUse</td><td>Denies any call touching protected/Clio paths — including Drive search <code>query</code> fields</td></tr>
+    <tr><td><code>scan_write_pii.sh</code></td><td>PreToolUse</td><td>Denies writes containing SSN/DOB-shaped PII</td></tr>
+    <tr><td><code>memory_log_check.sh</code></td><td>Stop</td><td>Enforces <code>MEMORY.md</code> logging discipline at session end</td></tr>
+  </tbody>
+</table>
+<p class="note">Validated on day one, not in theory: the PII scrubber caught a real SSN-shaped string in a draft artifact, and the protected-path hook caught a shell command whose text contained the protected-folder token. Both denials were written to the audit trail. A standing precedent also bars agents from <em>synthesizing</em> PII even to test the detectors.</p>
+
+<h2 id="verification"><span class="n">07</span> The Verification Gate</h2>
+<p>No output reaches the operator without passing all five gates. The Chief of Staff runs this on everything a specialist returns.</p>
+<div class="card">
+  <div class="gate"><span class="g">Gate 1</span><div><strong>Scope</strong> — did the agent stay in its lane? Cross-domain drift is flagged.</div></div>
+  <div class="gate"><span class="g">Gate 2</span><div><strong>Verification</strong> — did the agent check its own work? Self-reported "done" without proof is sent back.</div></div>
+  <div class="gate"><span class="g">Gate 3</span><div><strong>Format</strong> — is it in the 5-field report format? Missing a field = rejected.</div></div>
+  <div class="gate"><span class="g">Gate 4</span><div><strong>Privacy</strong> — any PII present? Redact before passing, and log the incident.</div></div>
+  <div class="gate"><span class="g">Gate 5</span><div><strong>Completeness</strong> — any open items, blockers, partials? Surface them — never hide incomplete work.</div></div>
+</div>
+
+<h2 id="memory"><span class="n">08</span> Memory &amp; Institutional Record</h2>
+<p>The system remembers. After every completed task the Chief of Staff appends one line to <code>MEMORY.md</code> in a fixed format — <code>[date] [event] → [result/decision] — [agent/person]</code> — and past entries are never edited, only appended. This is what lets a fresh session pick up context that isn't derivable from the code.</p>
+<div class="grid two">
+  <div class="card"><strong>Standing decisions</strong><p class="note" style="margin:6px 0 0">Locked facts: the Clio path is immutable, the workspace is local-only, credentials live outside the repo, cross-firm access revoked.</p></div>
+  <div class="card"><strong>Event log</strong><p class="note" style="margin:6px 0 0">A running history — audits, agent activations, verified statute lookups, architecture decisions — one line each.</p></div>
+</div>
+<p class="note" style="margin-top:12px">Session close is ritualized through a <code>/handoff</code> command: reflect on the session, append the memory line, update <code>WORKSPACE.md</code>, and re-mirror to Drive.</p>
+
+<h2 id="infra"><span class="n">09</span> Files, Hooks &amp; Infrastructure</h2>
+<div class="flow">&lt;workspace&gt;/                      <b>← local only, never Drive-synced</b>
+├── CLAUDE.md ABOS.md PROTOCOLS.md WORKSPACE.md MEMORY.md   backbone
+├── .claude/
+│   ├── agents/        cos · research · coo · cfo  (spawn definitions)
+│   ├── commands/      handoff.md  (session-close ritual)
+│   └── hooks/         protocol enforcement + JSONL audit logger
+├── agents/            SOUL / AGENTS / TOOLS / IDENTITY per agent
+├── scripts/           config.py · mirror_to_drive.sh · hook_rollup.sh · drive/
+├── knowledge-base/    Firm Knowledge Summary · AI-Use Policy · security research
+├── logs/hooks/        denials/ · actions/ · daily rollup/
+├── outputs/           agent-produced deliverables
+└── sop/               Agentic-BOS SOP + BUILD_LOG
+
+~/.config/&lt;firm&gt;/            credentials (mode 600 — never moved or referenced in files)
+&lt;runtime&gt;/agents/            runtime agent files</div>
+<ul class="clean">
+  <li><strong>Local-only workspace.</strong> The repo is never synced to Drive. A one-way, allowlist-driven <code>rsync</code> mirror exposes only firm-public docs — verified that <code>.claude/</code>, <code>agents/</code>, <code>scripts/</code>, and <code>logs/</code> stay out of the mirror.</li>
+  <li><strong>No credentials in any file.</strong> All auth lives in a mode-600 config directory; scripts import from <code>config.py</code> — no hardcoded secrets.</li>
+  <li><strong>Audit trail.</strong> Every hook decision writes a JSON line to <code>logs/hooks/</code>; a daily job rolls it up to a markdown summary.</li>
+  <li><strong>Workspace-scoped MCP.</strong> A filesystem MCP server scoped to the workspace, process-managed per session.</li>
+</ul>
+
+<h2 id="status"><span class="n">10</span> Current Status &amp; Roadmap</h2>
+<table>
+  <thead><tr><th>Agent</th><th>Status</th><th>Build stage</th></tr></thead>
+  <tbody>
+    <tr><td>Chief of Staff</td><td><span class="pill on">Active</span></td><td>Phase 3 validation passed — orchestrator online</td></tr>
+    <tr><td>Research</td><td><span class="pill on">Active</span></td><td>Phase 3 validation passed — statute smoke test</td></tr>
+    <tr><td>COO</td><td><span class="pill dev">In development</span></td><td>Phase 1 design complete — pending Phase 3 validation</td></tr>
+    <tr><td>CFO</td><td><span class="pill dev">In development</span></td><td>Phase 1 design complete — pending Phase 3 validation</td></tr>
+    <tr><td>Builder</td><td><span class="pill pend">Pending</span></td><td>Next in build order</td></tr>
+    <tr><td>CMO</td><td><span class="pill pend">Pending</span></td><td>Design not yet started</td></tr>
+  </tbody>
+</table>
+<h3>Open items awaiting operator decision</h3>
+<ul class="clean">
+  <li>Which SaaS tools to prioritize replacing first</li>
+  <li>Notification method for agent completions</li>
+  <li>Shared-drive reorganization (pending an admin conversation)</li>
+  <li>Duplicate-document dedupe decision in Drive</li>
+  <li>Activate the hourly Drive-mirror + daily-rollup cron after manual validation</li>
+</ul>
+
+<footer>
+  <p><strong>Law Firm OS — System Overview.</strong> Anonymized public edition of internal systems documentation, generated from the live workspace backbone (CLAUDE.md, ABOS.md, PROTOCOLS.md, WORKSPACE.md, MEMORY.md). Contains no client or personal PII, and the firm and its members are de-identified. Current phase: Phase 2 — Agent Setup.</p>
+</footer>
+
+</div>
+</body>
+</html>

@@ -13,6 +13,11 @@ system with attorney-client privilege enforced in code at the tool layer.
 > GoHighLevel, HubSpot) are named because naming them is what makes the
 > integration work legible.
 
+![System overview — the agent org chart and command structure](docs/system-overview.png)
+
+The full anonymized system documentation is browsable at
+[docs/system-overview.html](docs/system-overview.html).
+
 ## Why a law firm is the hard mode of AI operations
 
 Law practice is a regulated, privilege-bound, deadline-driven business where
@@ -83,6 +88,8 @@ result through five gates, and returns one synthesized answer.
 Full design in [docs/agent-operations.md](docs/agent-operations.md).
 
 ## Privilege enforced in code, not prompts
+
+![Privacy and guardrails — runtime hooks and the five-gate verification standard](docs/privacy-guardrails.png)
 
 The part I would defend in front of any bar association: the privacy protocol
 is not an instruction the model is asked to follow. It is a set of PreToolUse
