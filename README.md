@@ -1,17 +1,21 @@
 # Law Firm OS
 
-The operations architecture I built and run for a real criminal defense and
-personal injury practice. Not a demo and not a chatbot. It is the firm's
-working back office: AI intake classification feeding four systems of record,
-a CRM layer handling follow-up and booking, and a multi-agent operations
-system with attorney-client privilege enforced in code at the tool layer.
+The operations architecture I designed, built, and installed for a real
+criminal defense and personal injury practice as a paid consulting
+engagement. Not a demo and not a chatbot. It is the firm's working back
+office: AI intake classification feeding four systems of record, a CRM layer
+handling follow-up and booking, and a multi-agent operations system with
+attorney-client privilege enforced in code at the tool layer.
 
 > **About this repository.** This is an architecture portfolio, not a
-> deployable product. The firm, its people, and its clients are anonymized
-> throughout. The enforcement hooks in [`hooks/`](hooks/) are sanitized
-> versions of the production code. Commodity platforms (Clio, Make.com,
-> GoHighLevel, HubSpot) are named because naming them is what makes the
-> integration work legible.
+> deployable product. The system design and methodology documented here are
+> my intellectual property, developed as vendor work product and installed
+> for the client. The client firm, its people, and its clients are anonymized
+> throughout, and no client instance, configuration, or data appears here.
+> The enforcement hooks in [`hooks/`](hooks/) are sanitized versions of the
+> production code. Commodity platforms (Clio, Make.com, GoHighLevel,
+> HubSpot) are named because naming them is what makes the integration work
+> legible.
 
 ![System overview — the agent org chart and command structure](docs/system-overview.png)
 
