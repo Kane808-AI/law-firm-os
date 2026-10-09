@@ -1,11 +1,10 @@
 # Law Firm OS
 
-The operations architecture I designed, built, and installed for a real
-criminal defense and personal injury practice as a paid consulting
-engagement. Not a demo and not a chatbot. It is the firm's working back
-office: AI intake classification feeding four systems of record, a CRM layer
-handling follow-up and booking, and a multi-agent operations system with
-attorney-client privilege enforced in code at the tool layer.
+An anonymous architecture case study for AI intake, CRM automation, and
+governed agent operations in a law firm environment. It documents a working
+back office design while excluding client identity, configuration, and data.
+The system connects intake classification, systems of record, CRM follow-up,
+and a multi-agent operations layer with policy controls at the tool boundary.
 
 > **About this repository.** This is an architecture portfolio, not a
 > deployable product. The system design and methodology documented here are
@@ -91,14 +90,11 @@ result through five gates, and returns one synthesized answer.
 
 Full design in [docs/agent-operations.md](docs/agent-operations.md).
 
-## Privilege enforced in code, not prompts
+## Privacy controls at the tool boundary
 
-![Privacy and guardrails — runtime hooks and the five-gate verification standard](docs/privacy-guardrails.png)
-
-The part I would defend in front of any bar association: the privacy protocol
-is not an instruction the model is asked to follow. It is a set of PreToolUse
-hooks that inspect every tool call before it executes and deny the ones that
-touch protected ground.
+The privacy protocol is not only an instruction the model is asked to follow.
+PreToolUse hooks inspect tool calls before execution and deny requests that
+touch protected paths or contain high-risk PII-shaped writes.
 
 - **[`hooks/block_protected.sh`](hooks/block_protected.sh)** denies any tool
   call whose path-like fields reference protected client files, the practice
@@ -112,11 +108,10 @@ touch protected ground.
   memory ledger.
 
 Every allow and deny writes a JSON audit line, rolled up daily to a readable
-summary. The scrubber caught a real SSN-shaped string in a draft on day one,
-and the audit trail has the receipt. A standing rule even bars agents from
-synthesizing fake PII to test the detectors, so test data cannot become a
-leak vector. Full writeup in
-[docs/privacy-engineering.md](docs/privacy-engineering.md).
+summary. The public repository documents the control design but excludes
+client artifacts, production audit data, and validation evidence. Application
+agents are barred from synthesizing realistic PII. Full writeup in
+[`docs/privacy-engineering.md`](docs/privacy-engineering.md).
 
 ## The verification gate
 

@@ -257,7 +257,7 @@ NEXT STEP: who does what next — "None" if complete</div>
     <tr><td><code>memory_log_check.sh</code></td><td>Stop</td><td>Enforces <code>MEMORY.md</code> logging discipline at session end</td></tr>
   </tbody>
 </table>
-<p class="note">Validated on day one, not in theory: the PII scrubber caught a real SSN-shaped string in a draft artifact, and the protected-path hook caught a shell command whose text contained the protected-folder token. Both denials were written to the audit trail. A standing precedent also bars agents from <em>synthesizing</em> PII even to test the detectors.</p>
+<p class="note">The public version documents the PII scrubber and protected-path hook while excluding production audit details, client artifacts, and validation evidence. Application agents are barred from synthesizing realistic PII.</p>
 
 <h2 id="verification"><span class="n">07</span> The Verification Gate</h2>
 <p>No output reaches the operator without passing all five gates. The Chief of Staff runs this on everything a specialist returns.</p>

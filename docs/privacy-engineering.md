@@ -58,14 +58,10 @@ Runs before every Write and Edit. Scans outgoing content for SSN-shaped
 patterns (with impossible area numbers rejected to cut false positives) and
 full date-of-birth patterns. A match denies the write.
 
-On day one this caught a real SSN-shaped string in a draft artifact. The
-denial is in the audit log. That single event justified the whole layer,
-because the write it stopped was exactly the kind nobody would have noticed:
-a helpful agent copying a detail into a working document.
-
-A standing precedent bars agents from synthesizing fake PII even to test
-the detectors. Test fixtures live outside the workspace, so the test data
-can never become the leak.
+The public version documents this control without including production audit
+data, client artifacts, or validation evidence. Application agents are barred
+from synthesizing realistic PII, because generated data can become another
+leak vector if it enters the workspace.
 
 ### memory_log_check.sh — the discipline hook
 
@@ -79,9 +75,8 @@ survives busy days in a way that habit does not.
 
 Every hook decision, allow and deny alike, writes one JSON line with the
 hook name, tool, decision, and reason. A daily rollup renders the log to a
-human-readable summary. Day one of live operation: 33 decisions, 3 denials,
-each denial explainable after the fact. When someone asks what the AI layer
-did last Tuesday, the answer is a file, not a recollection.
+human-readable summary. When someone asks what the AI layer did on a given
+day, the answer is a file, not a recollection.
 
 ## Workspace isolation
 
@@ -97,8 +92,6 @@ did last Tuesday, the answer is a file, not a recollection.
 ## What this buys
 
 The honest claim is not "the system cannot leak." It is: every tool call
-crosses a checkpoint, the checkpoint has already caught real attempts, the
-audit trail proves both the catches and the ordinary days, and the humans
-kept every decision that carries professional-responsibility weight. That
-is a claim you can defend to an attorney, which is the standard that
-matters here.
+crosses a checkpoint, the audit design makes decisions reviewable, and humans
+keep every decision that carries professional-responsibility weight. That is
+a claim you can defend to an attorney, which is the standard that matters here.
