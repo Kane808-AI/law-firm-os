@@ -156,3 +156,20 @@ and active, finance and operations agents through design and awaiting
 validation, marketing and builder agents next. The phased order is
 deliberate. In this environment you validate each agent against real
 guardrails before the next one exists.
+
+## How this is built
+
+I direct AI coding agents against specs I write and gates I enforce. The
+architecture and the design decisions are mine. Every change lands as a pull
+request and is independently verified before it merges.
+
+## Work with me
+
+I build and operate AI operations systems: agent workflows, intake and CRM
+automation, and the approval and verification controls that keep them safe to
+run. I take on contract work through [Brand75](https://brand75.com), and I am
+also open to full time roles.
+
+- **Website:** https://chriskaneshiro.com
+- **Agency:** https://brand75.com
+
